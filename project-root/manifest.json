@@ -1,0 +1,44 @@
+{
+    "short_name": "Pedi ER Calc",
+    "name": "Pediatric ER Calculator",
+    "description": "A tool for pediatric emergency calculations.",
+    "start_url": "index.html",
+    "display": "standalone",
+    "background_color": "#263238",
+    "theme_color": "#00796b",
+    "icons": [
+        {
+            "src": "icons/icon-192x192.png", // Replace with your actual icon paths
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
+
+{
+  "background_color": "#263238",
+  "description": "A simple tool for pediatric emergency calculations.",
+  "display": "standalone",
+  "icons": [
+    {
+      "sizes": "192x192",
+      "src": "icons/icon-192x192.png",
+      "type": "image/png"
+    },
+    {
+      "sizes": "512x512",
+      "src": "icons/icon-512x512.png",
+      "type": "image/png"
+    }
+  ],
+  "lang": "en-US",
+  "name": "Pediatric ER Calculator",
+  "short_name": "Pedi ER Calc",
+  "start_url": "index.html",
+  "theme_color": "#00796b"
+}
