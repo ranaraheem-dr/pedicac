@@ -1,16 +1,28 @@
 import { calculateMedications } from './medications.js';
 import { getFluids, getLabCorrections, getResusProtocols, getGuidelines } from './data.js';
 
-// Add event listener for weight input
-document.getElementById("weight").addEventListener("input", function() {
-    const weight = parseFloat(this.value); 
-    if (weight > 0) { 
-        calculateFluids(weight); 
-        calculateMedicationsForAllCategories(weight); 
-        calculateLabCorrections(weight); 
-        calculateResuscitation(weight); 
-        populateGuidelinesTable();
-    }
+// Add event listener to button
+document.getElementById("calculate-button").addEventListener("click", function() {
+  const weightInput = document.getElementById("weight");
+  const weight = parseFloat(weightInput.value);
+
+  // Check if weight is a valid number
+  if (isNaN(weight) || weight <= 0.1) {
+    // Display error message
+    weightInput.classList.add("error");
+    document.getElementById("error-message").innerHTML = "Please enter a valid weight value.";
+  } else {
+    // Remove error message and class
+    weightInput.classList.remove("error");
+    document.getElementById("error-message").innerHTML = "";
+
+    // Call calculation functions
+    calculateFluids(weight);
+    calculateMedicationsForAllCategories(weight);
+    calculateLabCorrections(weight);
+    calculateResuscitation(weight);
+    populateGuidelinesTable();
+  }
 });
 
 // Function to calculate fluid requirements based on weight
@@ -118,13 +130,14 @@ function populateGuidelinesTable() {
               <td>${guideline.details}</td> 
             </tr>
           </table>
-       );
+      `);
     });
 }
 
 // Initial table population on page load
-calculateFluids(); 
-calculateMedicationsForAllCategories();
-calculateLabCorrections(); 
-calculateResuscitation(); 
-populateGuidelinesTable(); 
+const defaultWeight = 0.1; // kg
+calculateFluids(defaultWeight);
+calculateMedicationsForAllCategories(defaultWeight);
+calculateLabCorrections(defaultWeight);
+calculateResuscitation(defaultWeight);
+populateGuidelinesTable();

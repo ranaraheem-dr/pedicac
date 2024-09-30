@@ -1,13 +1,13 @@
 //scripts.js
 
 // Service Worker Configuration for caching
-const CACHE_NAME = 'paeds-er-cache-v1'; 
-const urlsToCache = [                    
-  '/',                                   
-  '/index.html',                         
-  '/styles.css',                         
-  '/scripts.js',                         
-  '/medications.js',                     
+const CACHE_NAME = 'paeds-er-cache-v1';
+const urlsToCache = [
+  '/',
+  '/index.html',
+  '/styles.css',
+  '/scripts.js',
+  '/medications.js',
 ];
 
 // Service Worker Registration (enhanced)
@@ -22,7 +22,6 @@ if ('serviceWorker' in navigator) {
       });
   });
 }
-
 // Categories for treatment types
 const categories = {                    
   FluidResuscitation: [],                
@@ -62,24 +61,39 @@ const categories = {
 };
 
 // Import API functions from data.js
-import { getFluids, getLabCorrections, getResusProtocols, getGuidelines } from './data.js';
+import { getFluids, getGuidelines, getResusProtocols, getLabCorrections } from './data.js';
+
+// Import application setup functions from main.js
+import { installApp, setupTables } from './main.js';
+
+// Import button and linking functions from medications.js
+import { showInstallButton } from './medications.js';
 
 // Mock Data for testing – Dehydration Plans
 const dehydrationPlan = [
-  { name: "Plan A", dose: 20 },          
-  { name: "Plan B", dose: 30 }           
+  { name: "Plan A", dose: 50 },
+  { name: "Plan B", dose: 100 },
+  { name: "Plan C-30 percent", dose:30 },
+  { name: "Plan C-70 percent", dose:70 },
 ];
 
 // Mock Data for medications
-const medications = [                    
-  { name: "Ceftriaxone", dose: 50, frequency: "OD" }, 
-  { name: "Amoxicillin", dose: 7.5, frequency: "BD" }   
+const medications = [
+  { name: "Ceftriaxone", dose: 50, frequency: "OD" },
+  { name: "Amoxicillin", dose: 7.5, frequency: "BD" },
+  { name: "Ciprofloxacin", dose: 10, frequency: "BD" },
+
 ];
 
 // Mock Data for lab corrections
 const labCorrections = [
   { name: "Sodium Correction", dose: 3 },
-  { name: "Potassium Correction", dose: 2 }
+  { name: "Potassium Correction", dose: 2 },
+  { name: "Calcium Correction", dose: 2 },
+  { name: "Magnesium Correction", dose: 1 },
+  { name: "Phosphorus Correction", dose: 1 },
+  { name: "Vitamin D Correction", dose: 1 },
+  { name: "Chloride Correction", dose: 1 }
 ];
 
 // Mock Data for resuscitation protocols
@@ -285,10 +299,9 @@ window.addEventListener('beforeinstallprompt', (event) => {
   // Stash the event so it can be triggered later
   deferredPrompt = event;
 
-  // Update UI to notify the user they   
- can install the app
+  // Update UI to notify the user they can install the app
   // (You'll need to implement this part based on your design)
-  showInstallButton(); 
+  showInstallButton();
 });
 
 // Function to trigger the install prompt
@@ -298,8 +311,7 @@ function installApp() {
     deferredPrompt.prompt();
 
     // Wait for the user to respond to the prompt
-    deferredPrompt.userChoice.then((choiceResult)   
- => {
+    deferredPrompt.userChoice.then((choiceResult)   => {
       if (choiceResult.outcome === 'accepted') {
         console.log('User accepted the install prompt');
       } else {
@@ -311,8 +323,7 @@ function installApp() {
   }
 }
 
-// Function   
- to show the install button (you'll need to implement this)
+// Function   to show the install button (you'll need to implement this)
 function showInstallButton() {
   // ... Add your logic to display the install button in your UI ...
 

@@ -1,58 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pediatric ER Calculator</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="manifest" href="manifest.json"> </head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pediatric ER Calculator</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512x512.png">
+  <meta name="theme-color" content="#00796b">
+  <link rel="stylesheet" href="styles/styles.css">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+</head>
 <body>
-    <div class="container">
-        <h1>Pediatric ER Calculator</h1>
-        <p class="creator-message">Crafted by Dr Rana Raheem for caregivers to uplift clinical rationale and improve outcomes for pediatric patients.</p>
+  <h1>Pediatric Emergency Room Calculator</h1>
+  <h1>Pediatric ER Calculator</h1> <!-- Main heading of the application -->
+  <button id="calculate-button">Calculate</button>
+  <input type="number" id="weight" placeholder="Enter patient weight">
+  <span id="error-message" style="color: red;"></span>
+  <p class="creator-message">Crafted by Dr Rana Raheem for caregivers to uplift clinical rationale and improve outcomes for pediatric patients.</p>
+  <h2>Lab Corrections</h2>
+  <div id="labsTable"></div>
+  <h2>Resuscitation Protocols</h2>
+  <div id="ResuscitationProtocols"></div>
+  <h2>Guidelines</h2>
+  <div id="guidelines"></div>
+  <h2>Medications</h2>
+  <div id="medications"></div>
+  <h2>Dehydration Plans</h2>
+  <div id="dehydrationPlans"></div>
 
-        <div class="input-section">
-            <label for="weight">Enter Weight (kg):</label>
-            <input type="number" id="weight" placeholder="Enter weight in kg" min="1" max="100" step="0.1">
-        </div>
-
-        <h2>Medications</h2>
-        <div id="medications-section"></div> 
-
-        <h2>Fluids</h2>
-        <div id="fluidsTable"></div>
-
-        <h2>Lab Corrections</h2>
-        <div id="labsTable"></div>
-
-        <h2>Resuscitation Protocols</h2>
-        <div id="resusTable"></div>
-
-        <h2>Guidelines</h2>
-        <div id="guidelinesTable"></div>
-
-    </div>
-
-    <script src="medications.js" type="module"></script>
-    <script src="data.js" type="module"></script> 
-    <script src="main.js" type="module"></script> 
-    <script src="scripts.js" type="module"></script> 
- 
-    <script>
-     // App Install Prompt Code (from scripts.js)
-     let deferredPrompt; 
-
-     window.addEventListener('beforeinstallprompt', (event) => {
-       // ...
-     });
-
-     function installApp() {
-       // ...
-     }
-
-     function showInstallButton() {
-       // ...
-     }
-    </script>
+  <script src="data.js"></script>
+  <script src="main.js"></script>
+  <script src="medications.js"></script>
+  <script src="scripts.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js')
+        .then(function(registration) {
+          console.log('Service worker registered:', registration);
+        })
+        .catch(function(error) {
+          console.error('Service worker registration failed:', error);
+        });
+    }
+  </script>
 </body>
 </html>

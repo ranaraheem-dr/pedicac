@@ -77,46 +77,102 @@ const medications = [
     ]
   },
   {
-    name: "Maintenance Fluid (1 hour)",
-    dose: 4,
-    frequency: "ml/kg/hr",
-    formula: "Given as continuous infusion",
-    category: "Fluid Maintenance",
-    indications: [
+    "name": "Maintenance Fluid (1 hour)",
+    "dose": {
+      "formula": "Weight-based dosing",
+      "rules": [
+        {
+          "condition": "weight < 10 kg",
+          "dose": 4,
+          "unit": "ml/hr"
+        },
+        {
+          "condition": "10 kg <= weight <= 20 kg",
+          "dose": "40 ml + 2 ml/kg * (weight - 10 kg)",
+          "unit": "ml/hr"
+        },
+        {
+          "condition": "weight > 20 kg",
+          "dose": "40 ml + 20 ml + 1 ml/kg * (weight - 20 kg)",
+          "unit": "ml/hr"
+        }
+      ]
+    },
+    "frequency": "ml/kg/hr",
+    "formula": "Given as continuous infusion",
+    "category": "Fluid Maintenance",
+    "indications": [
       "Maintenance fluid replacement",
       "Post-operative care",
       "Burn patients"
     ]
   },
   {
-    name: "Maintenance Fluid (8 hours)",
-    dose: 32, // This dose seems incorrect for 8-hour maintenance. It's likely the total volume.
-    frequency: "ml/kg", 
-    formula: "Given over 8 hours",
-    category: "Fluid Maintenance",
-    indications: [
+    "name": "Maintenance Fluid (8 hours)",
+    "dose": {
+      "formula": "Weight-based dosing",
+      "rules": [
+        {
+          "condition": "weight < 10 kg",
+          "dose": 32,
+          "unit": "ml"
+        },
+        {
+          "condition": "10 kg <= weight <= 20 kg",
+          "dose": "40 ml + 2 ml/kg * (weight - 10 kg) * 8",
+          "unit": "ml"
+        },
+        {
+          "condition": "weight > 20 kg",
+          "dose": "40 ml + 20 ml + 1 ml/kg * (weight - 20 kg) * 8",
+          "unit": "ml"
+        }
+      ]
+    },
+    "frequency": "ml/kg",
+    "formula": "Given over 8 hours",
+    "category": "Fluid Maintenance",
+    "indications": [
       "Maintenance fluid replacement",
       "Post-operative care",
       "Burn patients"
     ]
   },
   {
-    name: "Maintenance Fluid (24 hours)",
-    dose: 96, // This dose seems incorrect for 24-hour maintenance. It's likely the total volume.
-    frequency: "ml/kg",
-    formula: "Given over 24 hours",
-    category: "Fluid Maintenance",
-    indications: [
+    "name": "Maintenance Fluid (24 hours)",
+    "dose": {
+      "formula": "Weight-based dosing",
+      "rules": [
+        {
+          "condition": "weight < 10 kg",
+          "dose": 96,
+          "unit": "ml"
+        },
+        {
+          "condition": "10 kg <= weight <= 20 kg",
+          "dose": "40 ml + 2 ml/kg * (weight - 10 kg) * 24",
+          "unit": "ml"
+        },
+        {
+          "condition": "weight > 20 kg",
+          "dose": "40 ml + 20 ml + 1 ml/kg * (weight - 20 kg) * 24",
+          "unit": "ml"
+        }
+      ]
+    },
+    "frequency": "ml/kg",
+    "formula": "Given over 24 hours",
+    "category": "Fluid Maintenance",
+    "indications": [
       "Maintenance fluid replacement",
       "Post-operative care",
       "Burn patients"
     ]
   },
-
   // Antibiotics
   {
-    name: "Augmentin",  
-    dose: 30,  
+    name: "Augmentin",
+    dose: 30,
     frequency: "TDS",  
     formula: "30mg/kg/dose",  
     category: "Antibiotics",  
@@ -128,7 +184,7 @@ const medications = [
   },
   {
     name: "Amikacin",  
-    dose: 15,  
+    dose: 7.5,  
     frequency: "BD",  
     formula: "15-22.5mg/kg/24 hrs or 7.5mg/kg/dose",  
     category: "Antibiotics",  
@@ -142,7 +198,7 @@ const medications = [
     name: "Tanzo",  
     dose: 90,  
     frequency: "TDS",  
-    formula: "90mg/kg/d",  
+    formula: "90mg/kg/dose",  
     category: "Antibiotics",  
     indications: [  
       "Bacterial infections",  
@@ -175,8 +231,8 @@ const medications = [
   {
     name: "Ceftriaxone - Empirical",   
     dose: 50,  
-    frequency: "mg/kg/dose",  
-    formula: "50mg/kg/dose",  
+    frequency: "mg/kg/day",  
+    formula: "50mg/kg/day",  
     category: "Antibiotics",  
     indications: [  
       "Empirical treatment for suspected bacterial infections",  
@@ -187,8 +243,8 @@ const medications = [
   {
     name: "Ceftriaxone - Enteric",  
     dose: 75,  
-    frequency: "mg/kg/dose",  
-    formula: "75mg/kg/dose",  
+    frequency: "mg/kg/day",  
+    formula: "75mg/kg/day",  
     category: "Antibiotics",  
     indications: [  
       "Enteric fever (typhoid fever)",  
@@ -198,8 +254,8 @@ const medications = [
   {
     name: "Ceftriaxone - Meningitic",  
     dose: 100,  
-    frequency: "mg/kg/dose",  
-    formula: "100mg/kg/dose",  
+    frequency: "mg/kg/day",  
+    formula: "100mg/kg/day",  
     category: "Antibiotics",  
     indications: [  
       "Meningitis",  
@@ -208,9 +264,9 @@ const medications = [
   },
   {
     name: "Ciprofloxacin",  
-    dose: 20,  
-    frequency: "mg/kg/dose",  
-    formula: "20-30mg/kg/24hrs",  
+    dose: 10,  
+    frequency: "mg/kg/dose BD",  
+    formula: "10mg/kg/12hrs",  
     category: "Antibiotics",  
     indications: [  
       "Bacterial infections (e.g., urinary tract infections, pneumonia)",  
@@ -219,22 +275,22 @@ const medications = [
     ]
   },
   {
-    name: "Meronum",  
-    dose: 20,  
-    frequency: "mg/kg/dose",  
-    formula: "20mg/kg/dose",  
-    category: "Antibiotics",  
-    indications: [  
-      "Serious bacterial infections",  
-      "Pneumonia",  
-      "Urinary tract infections"  
-    ]
-  },
+  name: "Meronum",  
+  dose: 40,  
+  frequency: "mg/kg/dose TDS",  
+  formula: "40mg/kg/dose",  
+  category: "Antibiotics",  
+  indications: [  
+    "Serious bacterial infections",  
+    "Pneumonia",  
+    "Urinary tract infections"  
+  ]
+  },  
   {
     name: "Imepenum",  
-    dose: 20,  
-    frequency: "mg/kg/dose",  
-    formula: "20mg/kg/dose",  
+    dose: 15,  
+    frequency: "mg/kg/dose TDS",  
+    formula: "15mg/kg/dose",  
     category: "Antibiotics",  
     indications: [  
       "Serious bacterial infections",  
@@ -245,7 +301,7 @@ const medications = [
   {
     name: "Linezolid",  
     dose: 10,  
-    frequency: "mg/kg/dose",  
+    frequency: "mg/kg/dose BD",  
     formula: "10mg/kg/dose",  
     category: "Antibiotics",  
     indications: [  
@@ -256,8 +312,8 @@ const medications = [
   {
     name: "Sulzone",  
     dose: 40,  
-    frequency: "mg/kg/dose",  
-    formula: "40-60mg/kg/day",  
+    frequency: "mg/kg/dose BD",  
+    formula: "40mg/kg/day",  
     category: "Antibiotics",  
     indications: [  
       "Bacterial infections",  
@@ -304,7 +360,7 @@ const medications = [
   {
     name: "Flagyl ml",  
     dose: 1.5,  
-    frequency: "ml/kg/dose",  
+    frequency: "ml/kg/dose BD",  
     formula: "1.5ml/kg/dose",  
     category: "Antibiotics",  
     indications: [  
@@ -316,7 +372,7 @@ const medications = [
   {
     name: "Flagyl mg",  
     dose: 7.5,  
-    frequency: "mg/kg/dose",  
+    frequency: "mg/kg/dose BD",  
     formula: "7.5mg/kg/dose",  
     category: "Antibiotics",  
     indications: [  
@@ -327,9 +383,9 @@ const medications = [
   },
   {
     name: "Klaricid",  
-    dose: 15,  
-    frequency: "mg/kg/dose",  
-    formula: "15mg/kg/day",  
+    dose: 7.5,  
+    frequency: "mg/kg/dose BD",  
+    formula: "7.5mg/kg/BD",  
     category: "Antibiotics",  
     indications: [  
       "Bacterial infections",  
@@ -340,8 +396,8 @@ const medications = [
   {
     name: "Levofloxacin",  
     dose: 10,  
-    frequency: "mg/kg/dose",  
-    formula: "10mg/kg/day",  
+    frequency: "mg/kg/dose BD",  
+    formula: "10mg/kg/VBD",  
     category: "Antibiotics",  
     indications: [  
       "Bacterial infections (e.g., pneumonia, urinary tract infections)",  
@@ -352,8 +408,8 @@ const medications = [
   {
     name: "Cefixime",  
     dose: 10,  
-    frequency: "mg/kg/dose",  
-    formula: "10mg/kg/day",  
+    frequency: "mg/kg/dose BD",  
+    formula: "10mg/kg/BD",  
     category: "Antibiotics",  
     indications: [  
       "Bacterial infections (e.g., urinary tract infections, pneumonia)",  
@@ -364,8 +420,8 @@ const medications = [
   {
     name: "Cefotaxime",  
     dose: 50,  
-    frequency: "mg/kg/dose",  
-    formula: "50mg/kg/dose",  
+    frequency: "mg/kg/dose BD",  
+    formula: "50mg/kg/BD",  
     category: "Antibiotics",  
     indications: [  
       "Bacterial infections (e.g., pneumonia, urinary tract infections)",  
@@ -422,7 +478,7 @@ const medications = [
   {
     name: "Artemether stat",  
     dose: 3.6,  
-    frequency: "mg/kg/dose",  
+    frequency: "mg/kg/dose STAT",  
     formula: "3.6mg/kg/dose IM",  
     category: "Antimalarials",  
     indications: [  
@@ -433,7 +489,7 @@ const medications = [
   {
     name: "Artemether",  
     dose: 1.6,  
-    frequency: "mg/kg/dose",  
+    frequency: "mg/kg/dose OD",  
     formula: "1.6mg/kg/OD IM",  
     category: "Antimalarials",  
     indications: [  
@@ -543,8 +599,8 @@ const medications = [
   {
     name: "Gentamicin",  
     dose: 7.5,  
-    frequency: "mg/kg/dose",  
-    formula: "7.5mg/kg/dose",  
+    frequency: "mg/kg/dose TDS",  
+    formula: "7.5mg/kg/dose TDS",  
     category: "Aminoglycosides",  
     indications: [  
       "Bacterial infections (e.g., sepsis, meningitis)",  
@@ -1908,24 +1964,29 @@ export function getMedications(category) {
 }
 
 // Function to calculate medication dosages based on weight (modified)
-export function calculateMedications(weight, category) { // Added category parameter
-  const medsTbody = document.getElementById("meds-tbody"); 
-  medsTbody.innerHTML = ''; 
+export function calculateMedications({ weight, category }) {
+  const medsTbody = document.getElementById("meds-tbody");
+  medsTbody.innerHTML = '';
 
-  const medsForCategory = getMedications(category); // Fetch medications for the specified category
+  const medsForCategory = getMedications(category);
 
-  medsForCategory.forEach(med => {
-    const dose = med.dose * weight; 
-    if (dose > 0) {
-      medsTbody.insertAdjacentHTML('beforeend', `
-        <tr>
-          <td>${med.name}</td>
-          <td>${dose.toFixed(2)} ${med.frequency}</td>
-          <td>${med.formula}</td>
-          <td>${med.indications.join(", ")}</td>
-        </tr>
-      `);
-    }
-  });
+  const medicationRows = medsForCategory
+    .map(med => {
+      const dose = med.dose * weight;
+      if (dose > 0) {
+        return `
+          <tr>
+            <td>${med.name}</td>
+            <td>${dose.toFixed(2)} ${med.frequency}</td>
+            <td>${med.formula}</td>
+            <td>${med.indications.join(", ")}</td>
+          </tr>
+        `;
+      }
+      return '';
+    })
+    .join('');
+
+  medsTbody.insertAdjacentHTML('beforeend', medicationRows);
 }
-export { medications, calculateMedications }; 
+export { medications, calculateMedications };
