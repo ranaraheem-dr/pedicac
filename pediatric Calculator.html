@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pediatric Dose Calculator</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            padding: 20px;
+            margin: 0;
+            background-color: #1c1e22;
+            color: #e0e0e0;
+            background-image: linear-gradient(135deg, #1c1e22 0%, #2b2e34 100%);
+            background-attachment: fixed;
+        }
+        
+        h1 {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            color: #f1f1f1;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+        }
+        
+        input[type="number"],
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 2px solid #444;
+            background-color: #2e3035;
+            color: #f1f1f1;
+            border-radius: 12px;
+            font-size: 18px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        input[type="number"]:focus,
+        input[type="text"]:focus,
+        select:focus {
+            border-color: #e8a87c;
+            box-shadow: 0 0 15px rgba(232, 168, 124, 0.5);
+        }
+        
+        button {
+            padding: 15px 30px;
+            background-color: #ff6f61;
+            color: white;
+            font-size: 18px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+            box-shadow: 0 8px 15px rgba(255, 111, 97, 0.4);
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        button:hover {
+            background-color: #e85a4f;
+            box-shadow: 0 10px 20px rgba(232, 90, 79, 0.6);
+        }
+        
+        .message {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 16px;
+            color: #aaa;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: #2c2e34;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #444;
+            font-size: 16px;
+            color: #e0e0e0;
+        }
+        
+        th {
+            background-color: #3d4046;
+            color: #ffcc99;
+            font-weight: bold;
+        }
+        
+        .category-container {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #2a2d33;
+            border-radius: 15px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+            transition: background-color 0.3s ease;
+        }
+        
+        h2 {
+            margin-top: 0;
+            font-size: 28px;
+            color: #f1f1f1;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* Fairy Dust Animation */
+        body:after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 10%, transparent 30%), 
+                        radial-gradient(circle, rgba(255, 255, 255, 0.1) 10%, transparent 30%);
+            background-size: 2px 2px, 5px 5px;
+            animation: twinkle 2s infinite linear;
+        }
+        
+        @keyframes twinkle {
+            0% { background-position: 0 0, 0 0; }
+            100% { background-position: 100% 100%, 100% 100%; }
+        }
+        #results-container {
+            padding: 20px;
+        }
+        
+        .category-container {
+            background-color: #1c1e22;
+            margin-bottom: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+        
+        .category-container:hover {
+            background-color: #23252a;
+            transform: translateY(-5px);
+        }
+        
+        h2 {
+            font-size: 24px;
+            color: #ffdd99;
+            text-align: center;
+            margin-bottom: 15px;
+            text-shadow: 0px 0px 8px rgba(255, 255, 255, 0.8);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            background-color: #2a2c30;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #444;
+            color: #ffffff;
+            font-size: 14px;
+        }
+        
+        th {
+            background-color: #3c4045;
+            font-weight: bold;
+            color: #ffcc99;
+        }
+        
+        td {
+            background-color: #2a2c30;
+        }
+        
+        tbody tr:hover {
+            background-color: #3a3d42;
+        }
+        @media (max-width: 768px) {
+            body {
+                padding: 10px; /* Reduced padding for mobile */
+                font-size: 14px; /* Smaller font size for better readability */
+            }
+            
+            h1 {
+                font-size: 28px; /* Smaller heading size */
+            }
+            
+            input[type="number"],
+            input[type="text"],
+            select {
+                padding: 10px; /* Reduced padding for inputs */
+                font-size: 16px; /* Smaller font size for inputs */
+            }
+        
+            button {
+                padding: 10px 20px; /* Adjusted button padding */
+                font-size: 16px; /* Smaller button font size */
+            }
+        
+            .category-container {
+                padding: 15px; /* Reduced padding for category containers */
+            }
+        
+            h2 {
+                font-size: 20px; /* Smaller subheading size */
+            }
+        
+            table {
+                font-size: 12px; /* Smaller table font size */
+            }
+        
+            th, td {
+                padding: 10px; /* Reduced padding for table cells */
+            }
+        
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Pediatric Dose Calculator</h1>
+        <div class="message">
+            "Created after countless nights of learning, this automated solution streamlines our tasks for everyone's ease. I encourage you all to utilize it for enhanced efficiency. – Dr. Rana Raheem Mukhtar Jehandad"
+        </div>
+
+        <input type="number" id="weight" placeholder="Enter weight (kg)">
+        <button id="calculate">Calculate Doses</button>
+
+        <div id="results-container"></div>
+    </div>
+    
+    <script>
+        const jsonData = [
+        {
+            "name": "Plan A (Rehydration)",
+            "dose": 50,
+            "instructions": "50ml/kg over 4 hours",
+            "category": "Fluid Resuscitation",
+            "indications": ["Mild dehydration", "Viral gastroenteritis", "Mild diarrhea"]
+        },
+        {
+            "name": "Plan B (Moderate)",
+            "dose": 100,
+            "instructions": "100ml/kg over 4 hours",
+            "category": "Fluid Resuscitation",
+            "indications": ["Moderate dehydration", "Bacterial gastroenteritis", "Moderate diarrhea"]
+        },
+        {
+            "name": "Plan C (Severe - 30% fluid)",
+            "dose": 30,
+            "instructions": "30ml/kg over 30 minutes in child and 1 hour in infant",
+            "category": "Fluid Resuscitation",
+            "indications": ["Severe dehydration (30% fluid loss)", "Severe diarrhea", "Vomiting"]
+        },
+        {
+            "name": "Plan C (Severe - 70% fluid)",
+            "dose": 70,
+            "instructions": "70ml/kg over 5 hours in infant and 2.5 hours in child",
+            "category": "Fluid Resuscitation",
+            "indications": ["Severe dehydration (70% fluid loss)", "Severe diarrhea", "Vomiting"]
+        },
+        {
+            "name": "Fluid Bolus (10ml/kg)",
+            "dose": 10,
+            "instructions": "10ml/kg as bolus over 30-60 minutes",
+            "category": "Fluid Resuscitation",
+            "indications": ["Hypovolemia", "Shock", "Hemorrhage"]
+        },
+        {
+            "name": "Fluid Bolus (20ml/kg)",
+            "dose": 20,
+            "instructions": "20ml/kg as bolus over 30-60 minutes",
+            "category": "Fluid Resuscitation",
+            "indications": ["Hypovolemia", "Shock", "Hemorrhage"]
+        },
+        {
+            "name": "Maintenance Fluid",
+            "dose":  {
+                "formula": "4ml/kg/hr for first 10kg + 2ml/kg/hr for each kg from 11-20kg + 1ml/kg/hr for each kg above 20kg",
+                "weightBasedDose": "(4 * Math.min(weight, 10)) + (2 * Math.max(0, Math.min(weight - 10, 10))) + (1 * Math.max(0, weight - 20))",
+                },
+            "instructions": "Given as continuous infusion",
+            "category": "Fluid Maintenance",
+            "indications": ["Maintenance fluid replacement", "Post-operative care", "Burn patients"]
+        },
+        {
+            "name": "Maintenance Fluid 8 hourly",
+            "dose": {
+                "formula": "32ml/kg/hr for first 10kg + 16ml/kg/hr for each kg from 11-20kg + 8ml/kg/hr for each kg above 20kg",
+                "weightBasedDose": "8 * ((4 * Math.min(weight, 10)) + (2 * Math.max(0, Math.min(weight - 10, 10))) + (1 * Math.max(0, weight - 20)))",
+            },
+            "instructions": "Given as continuous infusion",
+            "category": "Fluid Maintenance",
+            "indications": ["Maintenance fluid replacement", "Post-operative care", "Burn patients"]
+        },
+        {
+            "name": "Maintenance Fluid 24 hourly",
+            "dose": {
+                "formula": "96ml/kg/24hr for first 10kg + 48ml/kg/hr for each kg from 11-20kg + 24ml/kg/hr for each kg above 20kg",
+                "weightBasedDose": "24 * ((4 * Math.min(weight, 10)) + (2 * Math.max(0, Math.min(weight - 10, 10))) + (1 * Math.max(0, weight - 20)))"
+            },
+            "instructions": "Given as continuous infusion",
+            "category": "Fluid Maintenance",
+            "indications": ["Maintenance fluid replacement", "Post-operative care", "Burn patients"]
+        },
+        {
+            "name": "Augmentin",
+            "dose": 30,
+            "instructions": "30mg/kg 8 hourly",
+            "category": "Antibiotics",
+            "indications": ["Bacterial infections (e.g., otitis media, pneumonia)", "Urinary tract infections", "Skin infections"]
+        },
+        {
+            "name": "Amikacin",
+            "dose": 7.5,
+            "instructions": "15-22.5mg/kg/24 hrs or 7.5mg/kg/12 hourly",
+            "category": "Antibiotics",
+            "indications": ["Serious gram-negative infections", "Pneumonia", "Meningitis"]
+        },
+        {
+            "name": "Tanzo",
+            "dose": 90,
+            "instructions": "90mg/kg/dose",
+            "category": "Antibiotics",
+            "indications": ["Bacterial infections", "Urinary tract infections", "Skin infections"]
+        },
+        {
+            "name": "Vancomycin - Empirical",
+            "dose": 15,
+            "instructions": "10mg/kg/dose",
+            "category": "Antibiotics",
+            "indications": ["Empirical treatment for suspected bacterial infections", "Methicillin-resistant Staphylococcus aureus (MRSA) infections"]
+        },
+        {
+            "name": "Vancomycin - Meningitic",
+            "dose": 20,
+            "instructions": "10mg/kg/dose",
+            "category": "Antibiotics",
+            "indications": ["Meningitis", "Central nervous system infections"]
+        },
+        {
+            "name": "Ceftriaxone - Empirical",
+            "dose": 50,
+            "instructions": "50mg/kg/day",
+            "category": "Antibiotics",
+            "indications": ["Empirical treatment for suspected bacterial infections", "Pneumonia", "Urinary tract infections"]
+        },
+        {
+            "name": "Ceftriaxone - Enteric",
+            "dose": 75,
+            "instructions": "75mg/kg/day",
+            "category": "Antibiotics",
+            "indications": ["Enteric fever (typhoid fever)", "Bacterial gastroenteritis"]
+        },
+        {
+            "name": "Ceftriaxone - Meningitic",
+            "dose": 100,
+            "instructions": "100mg/kg/day",
+            "category": "Antibiotics",
+            "indications": ["Meningitis", "Central nervous system infections"]
+        },
+        {
+            "name": "Ciprofloxacin",
+            "dose": 10,
+            "instructions": "10mg/kg/12 hourly",
+            "category": "Antibiotics",
+            "indications": ["Bacterial infections (e.g., urinary tract infections, pneumonia)", "Skin infections", "Bone and joint infections"]
+        },
+        {
+            "name": "Meronum",
+            "dose": 40,
+            "instructions": "40mg/kg/8 hourly",
+            "category": "Antibiotics",
+            "indications": ["Serious bacterial infections", "Pneumonia", "Urinary tract infections"]
+        },
+        {
+            "name": "Imepenum",
+            "dose": 15,
+            "instructions": "15mg/kg/8 hourly",
+            "category": "Antibiotics",
+            "indications": ["Serious bacterial infections", "Pneumonia", "Urinary tract infections"]
+        },
+        {
+            "name": "Linezolid",
+            "dose": 10,
+            "instructions": "10 mg/kg/12 hourly",
+            "category": "Antibiotics",
+            "indications": ["Bacterial infections (e.g., pneumonia, skin infections)", "MRSA infections"]
+        },
+        {
+            "name": "Sulzone",
+            "dose": 40,
+            "instructions": "40mg/kg/day",
+            "category": "Antibiotics",
+            "indications": ["Bacterial infections", "Urinary tract infections", "Skin infections"]
+        },
+        {
+            "name": "Targocid",
+            "dose": 10,
+            "instructions": "10mg/kg 12 hourly for first 3 doses, then 5mg/kg OD",
+            "category": "Antibiotics",
+            "indications": ["Bacterial infections", "Urinary tract infections", "Skin infections"]
+        },
+        {
+            "name": "Collistin min",
+            "dose": 25000,
+            "instructions": "75,000IU/kg/day calc dose is divided into 8 hourly",
+            "category": "Antibiotics",
+            "indications": ["Serious infections caused by multidrug-resistant gram-negative bacteria", "Pneumonia", "Urinary tract infections"]
+        },
+        {
+            "name": "Collistin max",
+            "dose": 50000,
+            "instructions": "150,000IU/kg/day calc dose is divided into 8 hourly",
+            "category": "Antibiotics",
+            "indications": ["Serious infections caused by multidrug-resistant gram-negative bacteria", "Pneumonia", "Urinary tract infections"]
+        },
+        {
+            "name": "Flagyl ml",
+            "dose": 1.5,
+            "instructions": "1.5ml/kg/12 hourly",
+            "category": "Antibiotics",
+            "indications": ["Bacterial and parasitic infections", "Gastrointestinal infections", "Skin infections"]
+        },
+        {
+            "name": "Flagyl mg",
+            "dose": 7.5,
+            "instructions": "7.5mg/kg/12 hourly",
+            "category": "Antibiotics",
+            "indications": ["Bacterial and parasitic infections", "Gastrointestinal infections", "Skin infections"]
+        },
+        {
+            "name": "Klaricid",
+            "dose": 7.5,
+            "instructions": "7.5mg/kg/12 hourly",
+            "category": "Antibiotics",
+            "indications": ["Bacterial infections", "Urinary tract infections", "Skin infections"]
+        },
+        {
+            "name": "Levofloxacin",
+            "dose": 10,
+            "instructions": "10mg/kg/V12 hourly",
+            "category": "Antibiotics",
+            "indications": ["Bacterial infections (e.g., pneumonia, urinary tract infections)", "Skin infections", "Bone and joint infections"]
+        },
+        {
+            "name": "Cefixime",
+            "dose": 10,
+            "instructions": "10mg/kg/12 hourly",
+            "category": "Antibiotics",
+            "indications": ["Bacterial infections (e.g., urinary tract infections, pneumonia)", "Skin infections", "Bone and joint infections"]
+        },
+        {
+            "name": "Cefotaxime",
+            "dose": 50,
+            "instructions": "50mg/kg/12 hourly",
+            "category": "Antibiotics",
+            "indications": ["Bacterial infections (e.g., pneumonia, urinary tract infections)", "Meningitis", "Central nervous system infections"]
+        },
+        {
+            "name": "Streptomycin Min",
+            "dose": 500000,
+            "instructions": "500000IU/kg/dose",
+            "category": "Antibiotics",
+            "indications": ["Tuberculosis", "Plague", "Brucellosis"]
+        },
+        {
+            "name": "Streptomycin Max",
+            "dose": 1000000,
+            "instructions": "1000000IU/kg/dose",
+            "category": "Antibiotics",
+            "indications": ["Tuberculosis", "Plague", "Brucellosis"]
+        },
+        {
+            "name": "Acyclovir (Emp irical)",
+            "dose": 10,
+            "instructions": "10mg/kg/8 hourly",
+            "category": "Antivirals",
+            "indications": ["Herpes simplex virus infections", "Varicella-zoster virus infections"]
+        },
+        {
+            "name": "Acyclovir (Encephalitis)",
+            "dose": 20,
+            "instructions": "20mg/kg/8 hourly",
+            "category": "Antivirals",
+            "indications": ["Herpes simplex encephalitis", "Varicella-zoster encephalitis"]
+        },
+        {
+            "name": "Artemether stat",
+            "dose": 3.6,
+            "instructions": "3.6mg/kg/dose IM",
+            "category": "Antimalarials",
+            "indications": ["Malaria", "Severe malaria"]
+        },
+        {
+            "name": "Artemether",
+            "dose": 1.6,
+            "instructions": "1.6mg/kg/24 HourlyIM",
+            "category": "Antimalarials",
+            "indications": ["Malaria", "Uncomplicated malaria"]
+        },
+        {
+            "name": "Nilstat drops",
+            "dose": 0.1,
+            "instructions": "0.1ml/kg/8 hourly PO, 1 drop is 1ml",
+            "category": "Antifungals",
+            "indications": ["Oral candidiasis", "Gastrointestinal candidiasis"]
+        },
+        {
+            "name": "Rifampicin min",
+            "dose": 10,
+            "instructions": "10mg/kg/dose",
+            "category": "ATT",
+            "indications": ["Tuberculosis", "Leprosy"]
+        },
+        {
+            "name": "Rifampicin max",
+            "dose": 20,
+            "instructions": "20mg/kg/dose",
+            "category": "ATT",
+            "indications": ["Tuberculosis", "Leprosy"]
+        },
+        {
+            "name": "Isoniazid min",
+            "dose": 10,
+            "instructions": "10mg/kg/dose",
+            "category": "ATT",
+            "indications": ["Tuberculosis", "Leprosy"]
+        },
+        {
+            "name": "Isoniazid max",
+            "dose": 20,
+            "instructions": "20mg/kg/dose",
+            "category": "ATT",
+            "indications": ["Tuberculosis", "Leprosy"]
+        },
+        {
+            "name": "Pyrazinamide min",
+            "dose": 25,
+            "instructions": "25mg/kg/dose",
+            "category": "ATT",
+            "indications": ["Tuberculosis", "Leprosy"]
+        },
+        {
+            "name": "Pyrazinamide max",
+            "dose": 35,
+            "instructions": "35mg/kg/dose",
+            "category": "ATT",
+            "indications": ["Tuberculosis", "Leprosy"]
+        },
+        {
+            "name": "Ethambutol min",
+            "dose": 15,
+            "instructions": "15mg/kg/dose",
+            "category": "ATT",
+            "indications": ["Tuberculosis", "Leprosy"]
+        },
+        {
+            "name": " Ethambutol max",
+            "dose": 25,
+            "instructions": "25mg/kg/dose",
+            "category": "ATT",
+            "indications": ["Tuberculosis", "Leprosy"]
+        },
+        {
+            "name": "Gentamicin",
+            "dose": 7.5,
+            "instructions": "7.5mg/kg/8 hourly",
+            "category": "Antibiotics",
+            "indications": ["Bacterial infections (e.g., sepsis, meningitis)", "Urinary tract infections"]
+        },
+        {
+            "name": "GTN",
+            "dose": 0.5,
+            "instructions": "0.5mcg/kg/min",
+            "category": "Vasodilators",
+            "indications": ["Hypertension", "Angina pectoris", "Heart failure"]
+        },
+        {
+            "name": "SNP",
+            "dose": 0.5,
+            "instructions": "0.5mcg/kg/min",
+            "category": "Vasodilators",
+            "indications": ["Hypertension", "Angina pectoris", "Heart failure"]
+        },
+        {
+            "name": "Amiodarone",
+            "dose": 5,
+            "instructions": "5mg/kg/dose",
+            "category": "Antiarrythmics",
+            "indications": ["Ventricular tachycardia", "Ventricular fibrillation", "Atrial fibrillation"]
+        },
+        {
+            "name": "Lignocaine",
+            "dose": 1,
+            "instructions": "1mg/kg/dose",
+            "category": "Antiarrythmics",
+            "indications": ["Ventricular tachycardia", "Ventricular fibrillation", "Atrial fibrillation"]
+        },
+        {
+            "name": "Dormicum",
+            "dose": 0.1,
+            "instructions": "0.1mg/kg/dose",
+            "category": "Antiepileptics",
+            "indications": ["Anxiety", "Insomnia", "Seizures"]
+        },
+        {
+            "name": "Atrelax",
+            "dose": 0.1,
+            "instructions": "0.1mg/kg/dose",
+            "category": "Muscle relaxants",
+            "indications": ["Muscle spasms", "Tetanus", "Status epilepticus"]
+        },
+        {
+            "name": "Avil",
+            "dose": 1,
+            "instructions": "10mg/kg/loading",
+            "category": "Antihistamines",
+            "indications": ["Allergic reactions", "Anaphylaxis", "Asthma"]
+        },
+        {
+            "name": "Solucortif stat",
+            "dose": 10,
+            "instructions": "10mg/kg/dose",
+            "category": "Corticosteroids",
+            "indications": ["Inflammatory conditions", "Allergic reactions", "Asthma"]
+        },
+        {
+            "name": "Solucortif",
+            "dose": 5,
+            "instructions": "5mg/kg/dose 6hrly",
+            "category": "Corticosteroids",
+            "indications": ["Inflammatory conditions", "Allergic reactions", "Asthma"]
+        },
+        {
+            "name": "Dexa anti-inflammatory",
+            "dose": 0.3,
+            "instructions": "0.3mg/kg/dose",
+            "category": "Corticosteroids",
+            "indications": ["Inflammatory conditions", "Allergic reactions", "Asthma"]
+        },
+        {
+            "name": "Dexa airway edema min",
+            "dose": 0.125,
+            "instructions": "0.5mg/kg/dose divided in 4 doses",
+            "category": "Corticosteroids",
+            "indications": ["Airway edema", "Asthma", "Chronic obstructive pulmonary disease (COPD)"]
+        },
+        {
+            "name": "Dexa airway edema max",
+            "dose": 0.5,
+            "instructions": "2mg/kg/dose divided in 4 doses",
+            "category": "Corticosteroids",
+            "indications": ["Airway edema", "Asthma", "COPD"]
+        },
+        {
+            "name": "Lasix",
+            "dose": 1,
+            "instructions": "1mg/kg/dose",
+            "category": "Diuretics",
+            "indications": ["Edema", "Hypertension", "Heart failure"]
+        },
+        {
+            "name": "Calcium Chloride",
+            "dose": 0.2,
+            "instructions": "0.2ml/kg/dose",
+            "category": "Electrolytes",
+            "indications": ["Hypocalcemia", "Tetany", "Seizures"]
+        },
+        {
+            "name": "Calcium Gluconate",
+            "dose": 1,
+            "instructions": "1ml/kg/dose",
+            "category": "Electrolytes",
+            "indications": ["Hypocalcemia", "Tetany", "Seizures"]
+        },
+        {
+            "name": "kcl",
+            "dose": 2,
+            "instructions": "2 mEq/kg/d",
+            "category": "Electrolytes",
+            "indications": ["Hypokalemia", "Cardiac arrhythmias", "Muscle weakness"]
+        },
+        {
+            "name": "Ranitidine (Zantac)",
+            "dose": 2,
+            "instructions": "2 mg/kg",
+            "category": "Antacids",
+            "indications": ["Gastroesophageal reflux disease (GERD)", "Peptic ulcer disease", "Zollinger-Ellison syndrome"]
+        },
+        {
+            "name": "Inj. Dicloran",
+            "dosage": 0.75,
+            "instructions": "0.75 mg/kg/dose",
+            "category": "NSAIDS",
+            "indications": ["Pain", "Inflammation", "Fever"]
+        },
+        {
+            "name": "Vitamin-k",
+            "dose": 0.5,
+            "instructions": "0.5mg/kg/dose",
+            "category": "Vitamins",
+            "indications": ["Vitamin K deficiency", "Bleeding disorders", "Newborns"]
+        },
+        {
+            "name": "Capace",
+            "dose": 10,
+            "instructions": "Given orally",
+            "category": "Antibiotics",
+            "indications": ["Bacterial infections", "Urinary tract infections", "Skin infections"]
+        },
+        {
+            "name": "Inderal",
+            "dose": 10,
+            "instructions": "Given orally",
+            "category": "Beta blockers",
+            "indications": ["Hypertension", "Angina pectoris", "Heart failure"]
+        },
+        {
+            "name": "Aldactone",
+            "dose": 1.2,
+            "instructions": "Given orally",
+            "category": "Diuretics",
+            "indications": ["Edema", "Hypertension", "Heart failure"]
+        },
+        {
+            "name": "Aspirin 1mg",
+            "dose": 1,
+            "instructions": "Given orally",
+            "category": "NSAIDs",
+            "indications": ["Pain", "Inflammation", "Fever"]
+        },
+        {
+            "name": "Aspirin 2mg",
+            "dose": 2,
+            "instructions": "Given orally",
+            "category": "NSAIDs",
+            "indications": ["Pain", "Inflammation", "Fever"]
+        },
+        {
+            "name": "Aspirin 3mg",
+            "dose": 3,
+            "instructions": "Given orally",
+            "category": "NSAIDs",
+            "indications": ["Pain", "Inflammation", "Fever"]
+        },
+        {
+            "name": "Aspirin 4mg",
+            "dose": 4,
+            "instructions": "Given orally",
+            "category": "NSAIDs",
+            "indications": ["Pain", "Inflammation", "Fever"]
+        },
+        {
+            "name": "Aspirin 5mg",
+            "dose": 5,
+            "instructions": "Given orally",
+            "category": "NSAIDs",
+            "indications": ["Pain", "Inflammation", "Fever"]
+        },
+        {
+            "name": "Britanyl 2.5mg",
+            "dose": 0.15,
+            "instructions": "Given orally 8 hourly",
+            "category": "Beta agonists",
+            "indications": ["Asthma", "COPD", "Chronic bronchitis"]
+        },
+        {
+            "name": "Endotracheal tube size",
+            "formula": "4 + Age/4",
+            "category": "Resuscitation",
+            "indications": ["Respiratory failure", "Cardiac arrest", "Trauma"]
+        },
+        {
+            "name": "Atropine Min",
+            "d ose": 0.01,
+            "instructions": "0.01-0.02 mg/kg IV",
+            "category": "Resuscitation",
+            "indications": ["Bradycardia", "Asystole", "Pulseless electrical activity"]
+        },
+        {
+            "name": "Atropine Max",
+            "dose": 0.03,
+            "instructions": "0.03 mg/kg IV",
+            "category": "Resuscitation",
+            "indications": ["Bradycardia", "Asystole", "Pulseless electrical activity"]
+        },
+        {
+            "name": "Bicarbonate Min",
+            "dose": 1,
+            "instructions": "1 mEq/kg",
+            "category": "Resuscitation",
+            "indications": ["Metabolic acidosis", "Respiratory acidosis", "Cardiac arrest"]
+        },
+        {
+            "name": "Bicarbonate Max",
+            "dose": 2,
+            "instructions": "2 mEq/kg",
+            "category": "Resuscitation",
+            "indications": ["Metabolic acidosis", "Respiratory acidosis", "Cardiac arrest"]
+        },
+        {
+            "name": "Calcium Chloride Min",
+            "dose": 0.1,
+            "instructions": "0.1 ml/kg",
+            "category": "Resuscitation",
+            "indications": ["Hypocalcemia", "Tetany", "Seizures"]
+        },
+        {
+            "name": "Calcium Chloride Max",
+            "dose": 0.3,
+            "instructions": "0.3 ml/kg",
+            "category": "Resuscitation",
+            "indications": ["Hypocalcemia", "Tetany", "Seizures"]
+        },
+        {
+            "name": "Calcium Gluconate Min",
+            "dose": 0.6,
+            "instructions": "0.6 ml/kg",
+            "category": "Resuscitation",
+            "indications": ["Hypocalcemia", "Tetany", "Seizures"]
+        },
+        {
+            "name": "Calcium Gluconate Max",
+            "dose": 1,
+            "instructions": "1 ml/kg",
+            "category": "Resuscitation",
+            "indications": ["Hypocalcemia", "Tetany", "Seizures"]
+        },
+        {
+            "name": "Dextrose",
+            "dose": 0.5,
+            "instructions": "0.5-1 g/kg IV",
+            "category": "Resuscitation",
+            "indications": ["Hypoglycemia", "Seizures", "Coma"]
+        },
+        {
+            "name": "Diltiazem (Cardizem)",
+            "dose": 0.25,
+            "instructions": "0.25 mg/kg over 2 min",
+            "category": "Resuscitation",
+            "indications": ["Supraventricular tachycardia", "Atrial fibrillation", "Atrial flutter"]
+        },
+        {
+            "name": "Ephedrine Min",
+            "dose": 0.2,
+            "instructions": "0.2 mg/kg/dose",
+            "category": "Resuscitation",
+            "indications": ["Hypotension", "Bradycardia", "Cardiac arrest"]
+        },
+        {
+            "name": "Ephedrine Max",
+            "dose": 0.3,
+            "instructions": "0.3 mg/kg/dose",
+            "category": "Resuscitation",
+            "indications": ["Hypotension", "Bradycardia", "Cardiac arrest"]
+        },
+        {
+            "name": "Epinephrine (1:10,000)",
+            "dose": 10,
+            "instructions": "10 mcg/kg",
+            "category": "Resuscitation",
+            "indications": ["Cardiac arrest", "Anaphylaxis", "Asthma"]
+        },
+        {
+            "name": "Digoxin",
+            "dose": 0.02,
+            "instructions": "Given as bolus over 30-60 min",
+            "category": "Resuscitation",
+            "indications": ["Atrial fibrillation", "Atrial flutter", "Heart failure"]
+        },
+        {
+            "name": "Lidocaine",
+            "dose": 1,
+            "instructions": "1 mg/kg",
+            "category": "Resuscitation",
+            "indications": ["Ventricular tachycardia", "Ventricular fibrillation", "Cardiac arrest"]
+        },
+        {
+            "name": "Atrial arrhythmias Min",
+            "dose": 0.5,
+            "instructions": "0.5 joule/kg",
+            "category": "Cardioversion",
+            "indications": ["Atrial fibrillation", "Atrial flutter", "Supraventricular tachycardia"]
+        },
+        {
+            "name": "Atrial arrhythmias Max",
+            "dose": 1,
+            "instructions": "1 joule/kg",
+            "category": "Cardioversion",
+            "indications": ["Atrial fibrillation", "Atrial flutter", "Supraventricular tachycardia"]
+        },
+        {
+            "name": "Ventricular Fibrillation",
+            "dose": 2,
+            "instructions": "2 joules/kg",
+            "category": "Cardioversion",
+            "indications": ["Ventricular fibrillation", "Pulseless ventricular tachycardia", "Cardiac arrest"]
+        },
+        {
+            "name": "Ventricular Tachycardia Min",
+            "dose": 1,
+            "instructions": "1 joules/kg",
+            "category": "Cardioversion",
+            "indications": ["Ventricular tachycardia", "Pulseless ventricular tachycardia", "Cardiac arrest"]
+        },
+        {
+            "name": "Ventricular Tachycardia Max",
+            "dose": 2,
+            "instructions": "2 joules/kg",
+            "category": "Cardioversion",
+            "indications": ["Ventricular tachycardia", "Pulseless ventricular tachycardia", "Cardiac arrest"]
+        },
+        {
+            "name": "Adenosine",
+            "dose": 0.1,
+            "instructions": "0.1 mg/kg",
+            "category": "Cardioversion",
+            "indications": ["Supraventricular tachycardia", "Atrial fibrillation", "Atrial flutter"]
+        },
+        {
+            "name": "Lerace Loading",
+            "dose": 20,
+            "instructions": "Given as bolus over 30-60 min",
+            "category": "Antiepileptics",
+            "indications": ["Seizures", "Epilepsy", "Status epilepticus"]
+        },
+        {
+            "name": "Lerace (Min Maintenance)",
+            "dose": 20,
+            "instructions": "20 mg/kg 12 hourly",
+            "category": "Antiepileptics",
+            "indications": ["Seizures", "Epilepsy", "Status epilepticus"]
+        },
+        {
+            "name": "Lerace (Max Maintenance)",
+            "dose": 60,
+            "instructions": "60 mg/kg 12 hourly",
+            "category": "Antiepileptics",
+            "indications": ["Seizures", "Epilepsy", "Status epilepticus"]
+        },
+        {
+            "name": "Epival Loading",
+            "dose": 20,
+            "instructions": "20 mg/kg over 30-60 min",
+            "category": "Antiepileptics",
+            "indications": ["Seizures", "Epilepsy", "Status epilepticus"]
+        },
+        {
+            "name": "Epival Maintenance",
+            "dose": 10,
+            "instructions": "10 mg/kg over 30-60 min",
+            "category": "Antiepileptics",
+            "indications": ["Seizures", "Epilepsy", "Status epilepticus"]
+        },
+        {
+            "name": "Phenytoin",
+            "dose": 10,
+            "instructions": "Given as bolus over 30-60 min",
+            "category": "Antiepileptics",
+            "indications": ["Seizures", "Epilepsy", "Status epilepticus"]
+        },
+        {
+            "name": "Mannitol stat",
+            "dose": 10,
+            "instructions": "Given as bolus over 30-60 min",
+            "category": "Antiepileptics",
+            "indications": ["Increased intracranial pressure", "Cerebral edema", "Seizures"]
+        },
+        {
+            "name": "Mannitol maintenance",
+            "dose": 5,
+            "instructions": "Given 6 hourly 5 days",
+            "category": "Antiepileptics",
+            "indications": ["Increased intracranial pressure", "Cerebral edema", "Seizures"]
+        },
+        {
+            "name": "Sildenafil (50,100,125 mg)",
+            "dose": 1,
+            "instructions": "Given orally",
+            "category": "Pulmonary Vasodil ators",
+            "indications": ["Pulmonary hypertension", "Pulmonary arterial hypertension"]
+        },
+        {
+            "name": "Benprost 20mcg",
+            "dose": 1,
+            "instructions": "mcg/kg/dose/8 hourly",
+            "category": "Pulmonary Vasodilators",
+            "indications": ["Pulmonary hypertension", "Pulmonary arterial hypertension"]
+        },
+        {
+            "name": "Bosmon 62.5mcg",
+            "dose": 1,
+            "instructions": "1mcg/kg/dose/12 hourly",
+            "category": "Pulmonary Vasodilators",
+            "indications": ["Pulmonary hypertension", "Pulmonary arterial hypertension"]
+        },
+        {
+            "name": "Ventolin",
+            "dose": 2.5,
+            "instructions": "Nebulised over 15-20 min",
+            "category": "Bronchodilators",
+            "indications": ["Asthma", "COPD", "Chronic bronchitis"]
+        },
+        {
+            "name": "Atem <1 year",
+            "dose": 0.1,
+            "instructions": "Nebulised over 15-20 min",
+            "category": "Bronchodilators",
+            "indications": ["Asthma", "COPD", "Chronic bronchitis"]
+        },
+        {
+            "name": "Atem >1 year",
+            "dose": 2.5,
+            "instructions": "Nebulised over 15-20 min",
+            "category": "Bronchodilators",
+            "indications": ["Asthma", "COPD", "Chronic bronchitis"]
+        },
+        {
+            "name": "Terbutaline loading min",
+            "dose": 2,
+            "instructions": "Given as continuous infusion",
+            "category": "Bronchodilators",
+            "indications": ["Asthma", "COPD", "Chronic bronchitis"]
+        },
+        {
+            "name": "Terbutaline loading max",
+            "dose": 10,
+            "instructions": "Given as continuous infusion",
+            "category": "Bronchodilators",
+            "indications": ["Asthma", "COPD", "Chronic bronchitis"]
+        },
+        {
+            "name": "Terbutaline maintenance min",
+            "dose": 0.2,
+            "instructions": "Given as continuous infusion",
+            "category": "Bronchodilators",
+            "indications": ["Asthma", "COPD", "Chronic bronchitis"]
+        },
+        {
+            "name": "Terbutaline maintenance max",
+            "dose": 0.4,
+            "instructions": "Given as continuous infusion",
+            "category": "Bronchodilators",
+            "indications": ["Asthma", "COPD", "Chronic bronchitis"]
+        },
+        {
+            "name": "Mgso4 min",
+            "dose": 25,
+            "instructions": "25mg/kg",
+            "category": "Bronchodilators",
+            "indications": ["Asthma", "COPD", "Chronic bronchitis"]
+        },
+        {
+            "name": "Mgso4 max",
+            "dose": 50,
+            "instructions": "50mg/kg",
+            "category": "Bronchodilators",
+            "indications": ["Asthma", "COPD", "Chronic bronchitis"]
+        },
+        {
+            "name": "Esmolol 100mcg",
+            "dose": 100,
+            "instructions": "100-500 mcg/kg over 1 minute",
+            "category": "Antiarrythmics",
+            "indications": ["Supraventricular tachycardia", "Atrial fibrillation", "Atrial flutter"]
+        },
+        {
+            "name": "Esmolol 200mcg",
+            "dose": 200,
+            "instructions": "100-500 mcg/kg over 1 minute",
+            "category": "Antiarrythmics",
+            "indications": ["Supraventricular tachycardia", "Atrial fibrillation", "Atrial flutter"]
+        },
+        {
+            "name": "Esmolol 500mcg",
+            "dose": 500,
+            "instructions": "100-500 mcg/kg over 1 minute",
+            "category": "Antiarrythmics",
+            "indications": ["Supraventricular tachycardia", "Atrial fibrillation", "Atrial flutter"]
+        },
+        {
+            "name": "Morphine",
+            "dose": 0.1,
+            "instructions": "0.1 mg/kg IV, IM, SC",
+            "category": "Opioids",
+            "indications": ["Pain", "Dyspnea", "Anxiety"]
+        },
+        {
+            "name": "Phenylephrine 5mcg",
+            "dose": 5,
+            "instructions": "5-20 mcg/kg every 10-15 minutes",
+            "category": "Vasoconstrictors",
+            "indications": ["Hypotension", "Bradycardia", "Cardiac arrest"]
+        },
+        {
+            "name": "Phenylephrine 20mcg",
+            "dose": 20,
+            "instructions": "5-20 mcg/kg every 10-15 minutes",
+            "category": "Vasoconstrictors",
+            "indications": ["Hypotension", "Bradycardia", "Cardiac arrest"]
+        },
+        {
+            "name": "Propranolol 0.015",
+            "dose": 0.015,
+            "instructions": "0.015-0.02 mg/kg IV",
+            "category": "Beta blockers",
+            "indications": ["Hypertension", "Angina pectoris", "Heart failure"]
+        },
+        {
+            "name": "Propranolol 0.02",
+            "dose": 0.02,
+            "instructions": "0.015-0.02 mg/kg IV",
+            "category": "Beta blockers",
+            "indications": ["Hypertension", "Angina pectoris", "Heart failure"]
+        },
+        {
+            "name": "Atropine-0.01",
+            "dose": 0.01,
+            "instructions": "0.01 mg/kg IV",
+            "category": "Reversals",
+            "indications": ["Bradycardia", "Asystole", "Pulseless electrical activity"]
+        },
+        {
+            "name": "Atropine-0.02",
+            "dose": 0.02,
+            "instructions": "0.02 mg/kg IV",
+            "category": "Reversals",
+            "indications": ["Bradycardia", "Asystole", "Pulseless electrical activity"]
+        },
+        {
+            "name": "Edrophonium",
+            "dose": 0.2,
+            "instructions": "0.2 mg/kg IV",
+            "category": "Reversals",
+            "indications": ["Myasthenia gravis", "Lambert-Eaton myasthenic syndrome"]
+        },
+        {
+            "name": "Flumazenil",
+            "dose": 0.01,
+            "instructions": "0.01 mg/kg IV",
+            "category": "Reversals",
+            "indications": ["Benzodiazepine overdose", "Sedation reversal"]
+        },
+        {
+            "name": "Glycopyrrolate-0.005",
+            "dose": 0.005,
+            "instructions": "0.005mg/kg IV",
+            "category": "Reversals",
+            "indications": ["Bradycardia", "Asystole", "Pulseless electrical activity"]
+        },
+        {
+            "name": "Glycopyrrolate-0.01",
+            "dose": 0.01,
+            "instructions": "0.01mg/kg IV",
+            "category": "Reversals",
+            "indications": ["Bradycardia", "Asystole", "Pulseless electrical activity"]
+        },
+        {
+            "name": "Narcan-0.01",
+            "dose": 0.01,
+            "instructions": "0.01mg/kg/dose IV",
+            "category": "Reversals",
+            "indications": ["Opioid overdose", "Respiratory depression"]
+        },
+        {
+            "name": "Narcan-0.1",
+            "dose": 0.1,
+            "instructions": "0.1mg/kg/dose IV",
+            "category": "Reversals",
+            "indications": ["Opioid overdose", "Respiratory depression"]
+        },
+        {
+            "name": "Neostigmine-0.05",
+            "dose": 0.05,
+            "instructions": "0.05 mg/kg IV",
+            "category": "Reversals",
+            "indications": ["Myasthenia gravis", "Lambert-Eaton myasthenic syndrome"]
+        },
+        {
+            "name": "Neostigmine-0.07",
+            "dose": 0.07,
+            "instructions": "0.05 mg/kg IV",
+            "category": "Reversals",
+            "indications": ["Myasthenia gravis", "Lambert-Eaton myasthenic syndrome"]
+        },
+        {
+            "name": "Physostigmine",
+            "dose": 0.01,
+            "instructions": "0.01 mg/kg IV",
+            "category": "Reversals",
+            "indications": ["Anticholinergic toxicity", "Delirium"]
+        },
+        {
+            "name": "Insulin-DKA/DM-0.02U",
+            "dose": 0.02,
+            "instructions": "0.02/kg/hr",
+            "category": "Insulin",
+            "indications": ["Diabetes mellitus", "Hyperglycemia", "Ketoacidosis"]
+        },
+        {
+            "name": "Insulin-DKA/DM-0.1U",
+            "dose": 0.1,
+            "instructions": "0.1/kg/hr",
+            "category": "Insulin",
+            "indications": ["Diabetes mellitus", "Hyperglycemia", "Ketoacidosis"]
+        },
+        {
+            "name": "Platelets",
+            "dose": 5,
+            "instructions": "5-10 ml/kg will raise count 50-100x10^9/L",
+            "category": "Blood Products",
+            "indications": ["Thrombocytopenia", "Bleeding disorders", "Surgery"]
+        },
+        {
+            "name": "PRBC",
+            "dose": 10,
+            "instructions": "10 ml/kg will raise Hg by 1 gm",
+            "category": "Blood Products",
+            "indications": ["Anemia", "Blood loss", "Surgery"]
+        },
+        {
+            "name": "FFP",
+            "dose": 10,
+            "instructions": "10 ml/kg will raise the platelet count by 50,000-100,000/uL",
+            "category": "Blood Products",
+            "indications": ["Coagulopathy", "Bleeding disorders", "Surgery"]
+        },
+        {
+            "name": "Dextrose",
+            "dose": 0.5,
+            "instructions": "0.5-1 g/kg IV over 15 min",
+            "category": "Hyperkalemia",
+            "indications": ["Hyperkalemia", "Hypoglycemia", "Seizures"]
+        },
+        {
+            "name": "Insulin-Hyperkalemia-0.2U",
+            "dose": 0.2,
+            "instructions": "0.2U Reg Insulin/g Dextrose",
+            "category": "Hyperkalemia",
+            "indications": ["Hyperkalemia", "Hypoglycemia", "Seizures"]
+        },
+        {
+            "name": "Insulin-Hyperkalemia-0.3U",
+            "dose": 0.3,
+            "instructions": "0.3U Reg Insulin/g Dextrose",
+            "category": "Hyperkalemia",
+            "indications": ["Hyperkalemia", "Hypoglycemia", "Seizures"]
+        },
+        {
+            "name": "Ca++",
+            "dose": 4,
+            "instructions": "4 mg/kg IV over 5-10 min",
+            "category": "Hyperkalemia",
+            "indications": ["Hyperkalemia", "Hypocalcemia", "Tetany"]
+        },
+        {
+            "name": "Kayexelate",
+            "dose": 1,
+            "instructions": "1 or 2 gm/kg PO, PR",
+            "category": "Hyperkalemia",
+            "indications": ["Hyperkalemia", "Hypokalemia", "Electrolyte imbalance"]
+        },
+        {
+            "name": "Dopamine",
+            "dose": 5,
+            "instructions": "Given as continuous infusion",
+            "category": "Vasoactive Medications",
+            "indications": ["Hypotension", "Bradycardia", "Cardiac arrest"]
+        },
+        {
+            "name": "Adrenaline 0.05mcg",
+            " dose": 0.05,
+            "instructions": "0.05 mcg/kg/min",
+            "category": "Vasoactive Medications",
+            "indications": ["Hypotension", "Bradycardia", "Cardiac arrest"]
+        },
+        {
+            "name": "Adrenaline 0.1mcg",
+            "dose": 0.1,
+            "instructions": "0.1 mcg/kg/min",
+            "category": "Vasoactive Medications",
+            "indications": ["Hypotension", "Bradycardia", "Cardiac arrest"]
+        },
+        {
+            "name": "Nor-Adrenaline 0.05mcg",
+            "dose": 0.05,
+            "instructions": "0.05 mcg/kg/min",
+            "category": "Vasoactive Medications",
+            "indications": ["Hypotension", "Bradycardia", "Cardiac arrest"]
+        },
+        {
+            "name": "Nor-Adrenaline 0.1mcg",
+            "dose": 0.1,
+            "instructions": "0.1 mcg/kg/min",
+            "category": "Vasoactive Medications",
+            "indications": ["Hypotension", "Bradycardia", "Cardiac arrest"]
+        },
+        {
+            "name": "Fentanyl 1mcg",
+            "dose": 1,
+            "instructions": "1 mcg/kg/hr",
+            "category": "Opioids",
+            "indications": ["Pain", "Dyspnea", "Anxiety"]
+        },
+        {
+            "name": "Fentanyl 4mcg",
+            "dose": 4,
+            "instructions": "4 mcg/kg/hr",
+            "category": "Opioids",
+            "indications": ["Pain", "Dyspnea", "Anxiety"]
+        },
+        {
+            "name": "Lasix 0.3mg",
+            "dose": 0.3,
+            "instructions": "0.3mg/kg/hr",
+            "category": "Diuretics",
+            "indications": ["Edema", "Hypertension", "Heart failure"]
+        },
+        {
+            "name": "Lasix 1mg",
+            "dose": 1,
+            "instructions": "1 mg/kg/hr",
+            "category": "Diuretics",
+            "indications": ["Edema", "Hypertension", "Heart failure"]
+        },
+        {
+            "name": "Aminophylline",
+            "dose": 1,
+            "instructions": "1 mg/kg/hr",
+            "category": "Bronchodilators",
+            "indications": ["Asthma", "COPD", "Chronic bronchitis"]
+        }
+        ];
+        const calculateButton = document.getElementById('calculate');
+
+/**
+ * Displays the calculated results grouped by category in the #results-container
+ * element.
+ *
+ * @param {number} weight - The patient's weight in kilograms.
+ */
+function displayResultsByCategory(weight) {
+    const resultsContainer = document.getElementById('results-container');
+    resultsContainer.innerHTML = ''; // Clear previous results
+
+    // Group medications by category
+    const categories = [...new Set(jsonData.map(item => item.category))];
+    categories.forEach(category => {
+        // Create a container for each category
+        const categoryContainer = document.createElement('div');
+        categoryContainer.classList.add('category-container'); // Dark theme style applied
+
+        // Add a heading for the category with magical glow effect
+        const categoryHeading = document.createElement('h2');
+        categoryHeading.innerText = category;
+        categoryHeading.style.textShadow = '0px 0px 8px rgba(255, 255, 255, 0.8)';
+        categoryContainer.appendChild(categoryHeading);
+
+        // Create a table for the category with dark theme and smooth animations
+        const table = document.createElement('table');
+        table.innerHTML = `
+            <thead>
+                <tr>
+                    <th>Drug Name</th>
+                    <th>Calculated Dose</th>
+                    <th>Instructions</th>
+                    <th>Indications</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        `;
+
+        // Filter items by category and add to the table
+        const filteredItems = jsonData.filter(item => item.category === category);
+        filteredItems.forEach(item => {
+            const dose = calculateDose(item, weight);
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${item.name}</td>
+                <td>${dose}</td>
+                <td>${item.instructions}</td>
+                <td>${item.indications ? item.indications.join(', ') : 'No indications available'}</td>
+            `;
+            
+            // Add dark color scheme and smooth hover effect for each row
+            row.style.backgroundColor = '#2a2c30';
+            row.style.color = '#fff';
+            row.style.transition = 'background-color 0.3s ease';
+            row.style.borderBottom = '1px solid #444';
+            row.addEventListener('mouseenter', () => {
+                row.style.backgroundColor = '#3a3d42';
+            });
+            row.addEventListener('mouseleave', () => {
+                row.style.backgroundColor = '#2a2c30';
+            });
+
+            table.querySelector('tbody').appendChild(row);
+        });
+
+        // Append the table to the category container
+        categoryContainer.appendChild(table);
+        resultsContainer.appendChild(categoryContainer);
+    });
+}
+
+
+/**
+ * Calculates the dose for a given medication and weight.
+ *
+ * @param {Object} medication - The medication to calculate the dose for.
+ * @param {number} weight - The weight of the patient in kilograms.
+ *
+ * @returns {string} The calculated dose as a string, including the unit of measurement.
+ */
+ function calculateDose(medication, weight) {
+    if (medication.unit === "mcg") {
+        // Return the dose in mcg
+        return (medication.dose * weight * 1000).toFixed(1); // Convert mg to mcg
+    } else if (medication.unit === "IU") {
+        // Return the dose in IU
+        return (medication.dose * weight).toFixed(1); // Assume IU are given directly
+    } else if (medication.category === "Syrups") {
+        const concentration = medication.concentration;
+        const doseMg = medication.dose * weight;
+        const doseMl = (doseMg / concentration) * 5; // Calculate in mL
+        return doseMg.toFixed(1); // Return only the numerical dose in mg
+    } else if (medication.name.includes("Maintenance Fluid")) {
+        return eval(medication.dose.weightBasedDose); // Return only the numerical value in mL/hr
+    } else {
+        return (medication.dose * weight).toFixed(1); // Return only the numerical dose in mg
+    }
+}
+
+
+        calculateButton.addEventListener('click', () => {
+            const weight = parseFloat(document.getElementById('weight').value);
+            if (weight > 0) {
+                displayResultsByCategory(weight);
+            } else {
+                alert('Please enter a valid weight.');
+            }
+        });
+    </script>
+</body>
+</html>
